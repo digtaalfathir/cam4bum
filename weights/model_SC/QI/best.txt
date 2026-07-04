@@ -1,0 +1,2 @@
+xvfb-run -a -s "-screen 0 1024x768x16" /usr/bin/python3 /opt/camera-sc2/detect-qi.py --weights /home/stechoq/Documents/camera-detection/best.pt --conf 0.91 --img-size 640 --source rtsp://admin:REDACTED@172.19.95.21 --nosave --exist-ok --device 0 --classes 0 1 2 3 4 5 6 7 8 9
+

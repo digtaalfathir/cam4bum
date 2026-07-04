@@ -1,0 +1,40 @@
+# ---- Python ----
+__pycache__/
+*.pyc
+*.pyo
+
+# ---- Model weights & large binaries (dikelola di luar git / Git LFS) ----
+*.pt
+*.pth
+*.onnx
+
+# ---- Media / rekaman ----
+*.avi
+*.mp4
+
+# ---- Reference spreadsheet besar ----
+*.xlsx
+
+# ---- Artefak training YOLOv7 ----
+runs/
+wandb/
+
+# ---- Log runtime (auto-generated, tumbuh tak terbatas) ----
+data/logs/*
+!data/logs/.gitkeep
+
+# ---- Output analitik (gambar/video per hari) ----
+data/analytic/analytic_ao/*
+data/analytic/analytic_qi/*
+!data/analytic/analytic_ao/.gitkeep
+!data/analytic/analytic_qi/.gitkeep
+
+# ---- Konfigurasi monitoring (berisi license key — jangan di-commit) ----
+archive/monitoring/
+
+# ---- Secret runtime (.env) — jangan commit; pakai .env.example sebagai template ----
+.env
+!.env.example
+
+# ---- OS ----
+.DS_Store

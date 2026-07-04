@@ -1,0 +1,54 @@
+sudo chown -R $USER:$USER /opt/camera-sc2/
+
+
+journalctl --user -fe -u camera_ao
+
+systemctl --user restart camera_ao
+
+ping 172.19.95.21
+ping 172.19.95.34
+
+
+cat connLogAO
+
+sudo rsync -arvz -e 'ssh -p 22' --progress stechoq@10.10.1.254:/home/stechoq/Documents/Kubota/ai-camera-kgz/runs/train/sugity.V22/weights/best.pt /opt/
+
+systemctl --user stop camera_qi.service 
+systemctl --user stop camera_ao.service 
+
+memeriksa status layanan
+systemctl status <nama_layanan>
+
+menghidupkan layanan
+systemctl start <nama_layanan>
+
+menghentikan layanan
+systemctl stop <nama_layanan>
+
+merestart layanan
+systemctl restart <nama_layanan>
+
+memuat ulang konfigurasi layanan
+systemctl reload <nama_layanan>
+
+menonaktifkan layanan dari startup
+systemctl disable <nama_layanan>
+
+mengaktifkan layanan untuk startup
+systemctl enable <nama_layanan>
+
+memeriksa daftar layanan aktif
+systemctl list-units --type=service
+
+melihat log dari layanan
+journalctl -u <nama_layanan>
+
+menampilkan informasi tentang unit
+systemctl list-units
+
+
+
+
+xvfb-run -a -s "-screen 0 1024x768x16" /usr/bin/python3 /opt/camera-sc2/detect-ao.py --weights best.pt --conf 0.95 --img-size 640 --device 0 --source rtsp://admin:REDACTED@172.19.95.34 --classes 0 1 2 3 4 7 8 9 10 11 12 13 14 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 --nosave
+
+/opt/camera-sc2/after-oven.sh

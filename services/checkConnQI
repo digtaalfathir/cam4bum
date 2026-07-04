@@ -1,0 +1,34 @@
+#!/bin/bash
+# Watchdog konektivitas kamera QI.
+# Membaca heartbeat data/state/updateConnQI (ditulis thread detect-qi.py tiap 5 detik).
+# Bila basi >TIMEOUT_LIMIT detik -> ping kamera -> restart service camera_qi.
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(dirname "$SCRIPT_DIR")"
+
+TIMEOUT_LIMIT=10
+PING_TARGET="172.19.95.21"
+PLANT="sugity"
+
+while true
+do
+    LAST_TIME=$(cat "$BASE_DIR/data/state/updateConnQI")
+    CURRENT_TIME=$(date +%s)
+    DIFF=$(($CURRENT_TIME-$LAST_TIME))
+
+    if [ "$DIFF" -ge "$TIMEOUT_LIMIT" ]; then
+
+        ping -c 1 $PING_TARGET > /dev/null 2>&1
+        PING_STATUS=$?
+
+        if [ $PING_STATUS -eq 0 ]; then
+
+            logger "{\"level\":\"WARNING\",\"message\":\"Program freeze detected - restarting camera service\",\"service\":\"camera_qi_watchdog\",\"plant\":\"$PLANT\",\"event\":\"camera_freeze\"}"
+
+            systemctl restart camera_qi.service
+            sleep 15
+
+        fi
+    fi
+
+    sleep 1
+done

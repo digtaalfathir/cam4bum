@@ -1,0 +1,32 @@
+#!/bin/bash
+
+TIMEOUT_LIMIT=6
+PING_TARGET="172.19.95.21"
+while true
+do
+        LAST_TIME=$(cat /opt/camera-sc2/updateConnQI);
+        CURRENT_TIME=$(date +%s);
+
+        selisih=$(($CURRENT_TIME-$LAST_TIME));
+        echo $selisih;
+
+        if [ "$selisih" -ge "$TIMEOUT_LIMIT" ]; then
+		PING_OUTPUT=$(ping -c 1 $PING_TARGET 2>&1)
+		PING_STATUS=$?
+
+		if [ $PING_STATUS -eq 0 ]; then
+			LATENCY=$(echo "$PING_OUTPUT" | grep -oP 'time=\K\S+')
+			LATENCY="${LATENCY} ms"
+		else
+			LATENCY="UNREACHABLE"
+		fi
+
+                echo "RESTARTING CAMERA QI PROGRAM!!!";
+                echo -e "\n$(date +"%Y-%m-%d %H:%M:%S") - $LATENCY - Connection Lost from QI Camera" >> /opt/camera-sc2/connLogQI;
+		systemctl --user restart camera_qi.service
+		sleep 15;
+        fi;
+
+        sleep 1;
+done
+

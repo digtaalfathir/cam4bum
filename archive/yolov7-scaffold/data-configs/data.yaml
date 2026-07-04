@@ -1,0 +1,8 @@
+names: 
+- 1
+- 2
+- 3
+nc: 3
+train: part_dataset/train/images
+val: part_dataset/test/images
+test: part_dataset/test/images
